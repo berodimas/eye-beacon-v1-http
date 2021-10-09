@@ -16,12 +16,7 @@ people_status = {
     'isInside': False
 }
 
-client = redis.Redis(host='localhost', port=6379, db=0)
-
-
-@app.route("/", methods=['GET'])
-def home():
-    return "Hello World"
+client = redis.Redis(host='redis', port=6379, db=0)
 
 @app.route("/eyebeacon/dashboard/people_counter", methods=['POST'])
 def post():
