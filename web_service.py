@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, abort, request
 from flask_restful import Api, abort
-import redis, json
+import redis, json, argparse
 
 app = Flask(__name__)
 api = Api(app)
@@ -15,6 +15,13 @@ people_status = {
     'name': '',
     'isInside': False
 }
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-u", "--url", type=str,
+                help="url for http host")
+ap.add_argument("-p", "--port", type=int,
+                help="port for http host")
+args = vars(ap.parse_args())
 
 client = redis.Redis(host='redis', port=6379, db=0)
 
@@ -60,4 +67,4 @@ def get():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host=args["url"], port=5001)
