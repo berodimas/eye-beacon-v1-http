@@ -21,9 +21,11 @@ ap.add_argument("-u", "--url", type=str,
                 help="url for http host")
 ap.add_argument("-p", "--port", type=int,
                 help="port for http host")
+ap.add_argument("-r", "--redis", type=str,
+                help="input for redis host")
 args = vars(ap.parse_args())
 
-client = redis.Redis(host='redis', port=6379, db=0)
+r = redis.Redis(host=args["redis"], port=6379, db=0)
 
 @app.route("/eyebeacon/dashboard/people_counter", methods=['POST'])
 def post():
@@ -44,7 +46,7 @@ def post():
     people_counter['total'] = request.json.get(
         'total', people_counter['total'])
     json_1 = json.dumps(people_counter)
-    client.publish('http_counter', json_1)
+    r.publish('http_counter', json_1)
     return jsonify({'people_counter': people_counter})
 
 @app.route("/eyebeacon/dashboard/people_status", methods=['GET'])
@@ -62,9 +64,9 @@ def get():
     people_status['isInside'] = request.json.get(
         'isInside', people_status['isInside'])
     json_2 = json.dumps(people_status)
-    client.publish('http_status', json_2)
+    r.publish('http_status', json_2)
     return jsonify({'people_status': people_status})
 
 
 if __name__ == "__main__":
-    app.run(host=args["url"], port=5001)
+    app.run(host=args["url"], port=args["port"])
