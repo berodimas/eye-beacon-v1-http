@@ -52,7 +52,7 @@ def handler_counter():
 
 @app.route("/eyebeacon/dashboard/status/<room>", methods=['POST'])
 def handler_status(room):
-    if len(status(room)) == 0:
+    if len(status) == 0:
         abort(404)
     if not request.json:
         abort(400)
